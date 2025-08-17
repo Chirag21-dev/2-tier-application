@@ -35,5 +35,13 @@ pipeline {
                 sh 'gitleaks detect --source ./api --exit-code 1'
             }
         }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=NodeJS-Project \
+                            -Dsonar.projectKey=NodeJS-Project '''
+                }
+            }
+        }
     }
 }
