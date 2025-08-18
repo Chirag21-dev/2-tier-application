@@ -35,20 +35,38 @@ pipeline {
                 sh 'gitleaks detect --source ./api --exit-code 1'
             }
         }
-        stage('SonarQube Analysis') {
+        #stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonar') {
                     sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=NodeJS-Project \
                             -Dsonar.projectKey=NodeJS-Project '''
                 }
             }
-        }
-         stage('Quality Gate Check') {
+        }#
+         #stage('Quality Gate Check') {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
                 }
             }
         
-    }
+    }#
+         stage('Trivy FS Scan') {
+            steps {
+                sh 'trivy fs --format table -o fs-report.html .'
+            }
+        }
+        
+        stage('Build-Tag & Push Backend Docker Image') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-cred') {
+                        dir('api') {
+                            sh 'docker build -t adijaiswal/backend:latest .'
+                            sh 'trivy image --format table -o backend-image-report.html adijaiswal/backend:latest '
+                            sh 'docker push adijaiswal/backend:latest'
+                           
+                        }
+                    }
+                }
 }
