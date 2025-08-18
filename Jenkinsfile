@@ -62,9 +62,9 @@ pipeline {
                 script {
                     withDockerRegistry(credentialsId: 'docker-cred') {
                         dir('api') {
-                            sh 'docker build -t adijaiswal/backend:latest .'
-                            sh 'trivy image --format table -o backend-image-report.html adijaiswal/backend:latest '
-                            sh 'docker push adijaiswal/backend:latest'
+                            sh 'docker build -t chiragks1/backend:latest .'
+                            sh 'trivy image --format table -o backend-image-report.html chiragks1/backend:latest '
+                            sh 'docker push chiragks1/backend:latest'
                            
                         }
                     }
