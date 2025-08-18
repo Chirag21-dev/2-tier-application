@@ -27,8 +27,10 @@ pipeline {
         }
         stage('GitLeaks Scan') {
             steps {
-                sh 'gitleaks detect --source ./client --exit-code 1'
-                sh 'gitleaks detect --source ./api --exit-code 1'
+                sh '''
+            docker run --rm -v $PWD:/app zricethezav/gitleaks:latest detect --source /app/client --exit-code 1
+            docker run --rm -v $PWD:/app zricethezav/gitleaks:latest detect --source /app/api --exit-code 1
+                  '''
             }
         }
     
