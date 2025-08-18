@@ -4,10 +4,6 @@ pipeline {
     tools {
         nodejs 'Nodejs23'
     }
-
-    environment {
-        SCANNER_HOME = tool 'sonar-scanner'
-    }
     stages {
         stage('Git Checkout') {
             steps {
