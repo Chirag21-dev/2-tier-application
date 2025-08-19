@@ -54,5 +54,19 @@ pipeline {
                 }
             }  
         }
+         stage('Build-Tag & Push Frontend Docker Image') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-cred') {
+                        dir('client') {
+                            sh 'docker build -t adijaiswal/frontend:latest .'
+                            sh 'trivy image --format table -o frontend-image-report.html adijaiswal/frontend:latest '
+                            sh 'docker push adijaiswal/frontend:latest'
+                        }
+                    }
+                }
+             }
+             
+        }
     }
 }
