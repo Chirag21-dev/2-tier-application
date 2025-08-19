@@ -25,7 +25,7 @@ pipeline {
                 }
             }
         }
-       /* 
+        /* 
        stage('GitLeaks Scan') {
             steps {
                sh 'gitleaks detect --source ./client --exit-code 1'
